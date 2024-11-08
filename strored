@@ -1,0 +1,277 @@
+-- Users Table
+CREATE TABLE IF NOT EXISTS Users (
+    user_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('Admin', 'Seller') NOT NULL
+);
+
+-- Products Table
+CREATE TABLE IF NOT EXISTS Products (
+    product_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    description TEXT,
+    category ENUM('Car Accessories', 'Electrical Gadgets', 'Hardware and Tools', 'Others') NOT NULL,
+    buying_price DECIMAL(10, 2),
+    selling_price DECIMAL(10, 2),
+    quantity INT(11),
+    image_url VARCHAR(255)
+);
+
+-- StockEntries Table
+CREATE TABLE IF NOT EXISTS StockEntries (
+    entry_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(11),
+    quantity INT(11),
+    entry_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id),
+    UNIQUE (product_id, entry_date) -- Ensure no duplicate stock entries for the same product on the same date
+);
+
+-- Sales Table
+CREATE TABLE IF NOT EXISTS Sales (
+    sale_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(11),
+    quantity INT(11),
+    actual_price DECIMAL(10, 2),
+    negotiated_discount DECIMAL(10, 2),
+    sale_price DECIMAL(10, 2), -- Will be calculated manually in the application logic
+    sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
+
+-- Credits Table
+CREATE TABLE IF NOT EXISTS Credits (
+    credit_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    amount DECIMAL(10, 2),
+    contact_details VARCHAR(255),
+    expected_payment_date DATE,
+    issue_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Returns Table
+CREATE TABLE IF NOT EXISTS Returns (
+    return_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    sale_id INT(11),
+    return_quantity INT(11),
+    return_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sale_id) REFERENCES Sales(sale_id)
+);
+
+-- Notifications Table
+CREATE TABLE IF NOT EXISTS Notifications (
+    notification_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    message TEXT,
+    notification_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Expenses Table
+CREATE TABLE IF NOT EXISTS Expenses (
+    expense_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(255),
+    amount DECIMAL(10, 2),
+    expense_date DATE,
+    user_id INT(11),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+-- IncomeStatement Table
+CREATE TABLE IF NOT EXISTS IncomeStatement (
+    statement_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    month VARCHAR(20),
+    total_sales DECIMAL(10, 2),
+    total_expenses DECIMAL(10, 2),
+    net_income DECIMAL(10, 2),
+    statement_date DATE
+);
+
+-- TransactionHistory Table
+CREATE TABLE IF NOT EXISTS TransactionHistory (
+    transaction_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11),
+    action VARCHAR(255),
+    action_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+-- ReturnsHistory Table
+CREATE TABLE IF NOT EXISTS ReturnsHistory (
+    return_history_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(11),
+    return_reason TEXT,
+    return_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
+
+-- ProductVariations Table
+CREATE TABLE IF NOT EXISTS ProductVariations (
+    variation_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(11),
+    color VARCHAR(50),
+    size VARCHAR(50),
+    subname VARCHAR(50),
+    quantity INT(11),
+    FOREIGN KEY (product_id) REFERENCES Products(product_id),
+    UNIQUE (product_id, color, size, subname) -- Ensure unique combinations of product variations
+);
+
+-- ProductImages Table
+CREATE TABLE IF NOT EXISTS ProductImages (
+    image_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(11),
+    image_url VARCHAR(255),
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
+
+-- UserActivityLog Table
+CREATE TABLE IF NOT EXISTS UserActivityLog (
+    log_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(11),
+    activity TEXT,
+    activity_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+-- Alerts Table
+CREATE TABLE IF NOT EXISTS Alerts (
+    alert_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    alert_message TEXT,
+    alert_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Settings Table
+CREATE TABLE IF NOT EXISTS Settings (
+    setting_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    setting_key VARCHAR(50) UNIQUE,
+    setting_value VARCHAR(255)
+);
+
+-- StockUpdateHistory Table
+CREATE TABLE IF NOT EXISTS StockUpdateHistory (
+    update_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    action VARCHAR(255)
+);
+
+-- NewStock Table
+CREATE TABLE IF NOT EXISTS NewStock (
+    new_stock_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(11),
+    quantity INT(11),
+    update_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
+
+-- AccumulatedDiscounts Table
+CREATE TABLE IF NOT EXISTS AccumulatedDiscounts (
+    discount_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(11),
+    total_discount DECIMAL(10, 2),
+    discount_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
+
+-- StockManagement Table (to handle unique constraints and monthly closing)
+CREATE TABLE IF NOT EXISTS StockManagement (
+    stock_id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    product_id INT(11),
+    entry_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    buying_price DECIMAL(10, 2),
+    selling_price DECIMAL(10, 2),
+    quantity INT(11),
+    FOREIGN KEY (product_id) REFERENCES Products(product_id),
+    UNIQUE (product_id, entry_date) -- Ensure no duplicate entries for the same product on the same date
+);
+
+
+
+
+<?php
+include '../includes/config.php';
+
+// Fetch products and categories from the database
+$sql_products = "SELECT * FROM Products";
+$result_products = $conn->query($sql_products);
+
+$sql_categories = "SELECT * FROM Categories";
+$result_categories = $conn->query($sql_categories);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Products</title>
+    <link rel="stylesheet" href="../frameworks/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../frameworks/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="../frameworks/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../frameworks/fontawesome/js/all.min.js"></script>
+    <script src="../frameworks/gsap/minified/gsap.min.js"></script>
+    <script src="../frameworks/foundation/js/foundation.min.js"></script>
+    <style>
+        /* Existing styles... */
+    </style>
+</head>
+<body>
+    <div class="everything">
+        <h1 style="color: gold; font-size: 57px; text-align:center; margin-block-start: 12px; text-shadow: 4px 4px 8px #333333">Products in Your Stock</h1>
+        <div class="container">
+            <div class="sidebar">
+                <div class="filter-bar">
+                    <input type="text" id="searchInput" placeholder="Search products...">
+                    <hr>
+                    <h3 style="font-size: 25px; color: grey; text-align:center;">Filter by Category</h3>
+                    <hr>
+                    <div class="inside-sidebar">
+                        <ul id="categoryList" class="list-group">
+                            <?php while ($category = $result_categories->fetch_assoc()) : ?>
+                                <li class="list-group-item">
+                                    <a href="#" class="category-filter" data-id="<?php echo htmlspecialchars($category['category_id']); ?>">
+                                        <i class="fas fa-tags"></i> <?php echo htmlspecialchars($category['name']); ?>
+                                    </a>
+                                </li>
+                            <?php endwhile; ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row custom-scroll" id="productContainer">
+                <?php while ($row = $result_products->fetch_assoc()) : ?>
+                    <div class="col-md-4">
+                        <div class="product-card" data-id="<?php echo htmlspecialchars($row['product_id']); ?>" data-category-id="<?php echo htmlspecialchars($row['category_id']); ?>">
+                            <img src="../images/<?php echo htmlspecialchars($row['image']); ?>" alt="<?php echo htmlspecialchars($row['name']); ?>">
+                            <div class="product-card-body">
+                                <h5 style="color: white; font-size: 37px; margin-block-start: -62px; text-shadow: 4px 4px 8px #333333">
+                                    <b><?php echo htmlspecialchars($row['name']); ?></b>
+                                </h5>
+                                <h3 style="color: #007bff; font-size: 18px">Price: $<?php echo htmlspecialchars($row['selling_price']); ?></h3>
+                                <h3 style="color: #007bff; font-size: 18px">Quantity: x<?php echo htmlspecialchars($row['quantity']); ?></h3>
+                                <span class="expand-icon" onclick="toggleDetails(this)"><i class="fas fa-caret-down"></i></span>
+                                <span class="close-icon" onclick="toggleDetails(this)"><i class="fas fa-caret-up"></i></span>
+                            </div>
+                            <div class="card-details">
+                                <p style="color: green; font-size: 18px">Description: <?php echo htmlspecialchars($row['description']); ?></p>
+                                <p style="color: green; font-size: 18px">Buying Price: $<?php echo htmlspecialchars($row['buying_price']); ?></p>
+                                <p style="color: green; font-size: 18px">Items Sold: none  </p>
+                                <p style="color: green; font-size: 18px">Initial Stock: unknown</p>
+                                <p style="color: green; font-size: 18px">Profit: $0.00</p>
+                                <p style="color: green; font-size: 18px">Variations: none</p>
+                            </div>
+                        </div>
+                    </div>
+                <?php endwhile; ?>
+            </div>
+        </div>
+
+        <!-- Fullscreen card modal -->
+        <div id="fullscreenCard" class="fullscreen-card">
+            <div class="fullscreen-card-content">
+                <div class="loading-ring"></div>
+                <div id="fullscreenCardContent">
+                    <!-- Dynamic content will be loaded here -->
+                </div>

@@ -1,0 +1,244 @@
+  .home-container{
+    content:"";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+    background-image: url('../images/d.jpeg');
+    filter: blur(100px);
+    z-index: -1;
+  }
+  .home-container::before{
+    content:"";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../images/d.jpeg');
+    filter: blur(10px);
+    z-index: -1;
+  }
+  
+  .blurred-bg{
+    
+    z-index: 1;
+  }
+  .welcome-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 20px 0;
+    color: #f8f8f8;
+    text-align: center;
+    
+  }
+  .section2-container{
+    margin-block-start: 100px;
+  }
+  .overview-section, .overview-section2, .system-overview-section, .about-us-section, .vision-mission-section, .motivational-section {
+    padding: 50px 0;
+    text-align: center;
+  }
+  
+ 
+  .tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  
+  .tab {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .tab.active {
+    background-color: rgba(255, 255, 255, 0.5);
+    color: #000;
+  }
+  
+  .motivational-text {
+    font-size: 1.2rem;
+    margin-top: 30px;
+    color: #f8f8f8;
+    text-align: center;
+  }
+  
+  .cta-section {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .cta-button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .register-button {
+    background-color: #ffc107;
+    color: #000;
+    padding: 20px 10px;
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .register-button:hover {
+    background-color: #ffffff;
+  }
+  
+  .login-button {
+    background-color: rgb(245, 162, 9);
+    color: #fff;
+    border: 2px solid #fff;
+    padding: 20px 10px;
+    border-radius: 10px;
+  }
+  
+  .login-button:hover {
+    background-color: #fff;
+    color: #000;
+  }
+  
+  .section2-container {
+    background-color: #1b1b1b;
+    padding: 50px 0;
+  }
+  
+  .video-card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+  }
+  
+  .video-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  .video-space {
+    width: 100%;
+    background-color: #000;
+  }
+  
+  .video-description {
+    padding: 20px;
+    background-color: #292929;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .system-overview-section, .section-system-overview {
+    background-color: #2b2b2b;
+    padding: 50px 0;
+    color: #fff;
+  }
+  
+  .overview-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+  }
+  
+  .overview-description {
+    flex: 1;
+    padding-right: 20px;
+  }
+  
+  .overview-slideshow img {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .section3 {
+    background-color: aqua;
+
+  }
+  .section4 {
+    background-color: aqua;
+
+  }
+  .section5{
+    background-color: aqua;
+
+  }
+  .section6 {
+    background-color: aqua;
+
+  } 
+  .section7{
+    background-color: aqua;
+
+  }
+  .cards-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  
+  .card {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px;
+    max-width: 300px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .card-icon {
+    font-size: 2.5rem;
+    color: #ffc107;
+    margin-bottom: 10px;
+  }
+  
+  .card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .footer {
+    background-color: #111;
+    padding: 20px 0;
+    color: #fff;
+    text-align: center;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .footer-left, .footer-right {
+    flex: 1;
+    padding: 10px;
+  }
+  
+  .social-icons a {
+    color: #fff;
+    font-size: 1.5rem;
+    margin: 0 10px;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .social-icons a:hover {
+    color: #ffc107;
+  }
+  
